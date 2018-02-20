@@ -18,10 +18,28 @@ public class Map {
     private static final int CELL_SIZE = 2;
     private static final int WIDTH = 1280 / CELL_SIZE;
     private static final int HEIGHT = 720 / CELL_SIZE;
+    private static final float MAX_WIND_POWER = 50f;
+    private static final int MAX_CLOUDS_COUNT = 50;
+
+    private float cloud_color_r;
+    private float cloud_color_g;
+    private float cloud_color_b;
+    private float cloud_color_a;
+
+    private float ground_color_a;
+    private float ground_color_b;
+    private float ground_color_r;
+
+    private boolean night_light;
+
+    public boolean isNight_light() {
+        return night_light;
+    }
 
 
     public Map() {
         this.textureGround = new TextureRegion(Assets.getInstance().getAtlas().findRegion("grass"));
+
         this.textureClouds = new TextureRegion[3];
         TextureRegion[][] tmp = new TextureRegion(Assets.getInstance().getAtlas().findRegion("clouds")).split(256, 128);
         for (int i = 0; i < 3; i++) {
@@ -30,18 +48,64 @@ public class Map {
         this.data = new byte[WIDTH][HEIGHT];
         this.color = new float[WIDTH][HEIGHT];
         this.generate();
-        this.clouds = new Vector3[14];
+        int cloudCount = MathUtils.random(1, MAX_CLOUDS_COUNT);
+        this.clouds = new Vector3[cloudCount];
         for (int i = 0; i < clouds.length; i++) {
             clouds[i] = new Vector3(MathUtils.random(-640, 1280 + 640), MathUtils.random(560, 700), MathUtils.random(0, 2));
         }
-        this.windPower = 20.0f;
+        this.windPower = MathUtils.random(-MAX_WIND_POWER, MAX_WIND_POWER);
+        this.cloud_color_a = MathUtils.random(0f, 1f);
+        if (MathUtils.random(0,1) == 1) {
+            this.cloud_color_r = MathUtils.random(0f, 1f);
+            this.cloud_color_g = MathUtils.random(0f, 1f);
+            this.cloud_color_b = MathUtils.random(0f, 1f);
+        }
+        else {
+            this.cloud_color_r = 1;
+            this.cloud_color_g = 1;
+            this.cloud_color_b = 1;
+
+        }
+
+        this.ground_color_a = MathUtils.random(0f, 1f);
+        if (MathUtils.random(0,1) == 1) {
+            this.ground_color_r = MathUtils.random(0f, 1f);
+            this.ground_color_b = MathUtils.random(0f, 1f);
+        }
+        else {
+            this.ground_color_r = 0;
+            this.ground_color_b = 0;
+
+        }
+        ;
+        if (MathUtils.random(0,1) == 1){
+            night_light = true;
+            cloud_color_r *= 0.5;
+            cloud_color_g *= 0.5;
+            cloud_color_b *= 0.5;
+            ground_color_r *= 0.3;
+            ground_color_b *= 0.3;
+        }
+        else{
+            cloud_color_r /= 0.5;
+            cloud_color_g /= 0.5;
+            cloud_color_b /= 0.5;
+            if (cloud_color_r >1)
+                cloud_color_r = 1;
+            if (cloud_color_g >1)
+                cloud_color_g = 1;
+            if (cloud_color_b >1)
+                cloud_color_b = 1;
+        }
+
     }
 
     public void generate() {
         int[] heightMap = new int[WIDTH];
         heightMap[0] = MathUtils.random(100, HEIGHT / 5 * 3);
         heightMap[WIDTH - 1] = MathUtils.random(100, HEIGHT / 5 * 3);
-        split(heightMap, 0, WIDTH - 1, 80, 20);
+        int iterDecrease = MathUtils.random(10,20);
+        split(heightMap, 0, WIDTH - 1, 80, iterDecrease);
         for (int i = 0; i < 2; i++) {
             slideWindow(heightMap, 7);
         }
@@ -86,15 +150,18 @@ public class Map {
     }
 
     public void render(SpriteBatch batch) {
+
+        //рендер земли
         for (int i = 0; i < WIDTH; i++) {
             for (int j = 0; j < HEIGHT; j++) {
                 if (data[i][j] == 1) {
-                    batch.setColor(0, color[i][j], 0, 1);
+                    batch.setColor(ground_color_r, color[i][j], ground_color_b, ground_color_a);
                     batch.draw(textureGround, i * CELL_SIZE, j * CELL_SIZE, CELL_SIZE, CELL_SIZE);
                 }
             }
         }
-        batch.setColor(1, 1, 1, 1);
+        //облака
+        batch.setColor(cloud_color_r, cloud_color_g, cloud_color_b, cloud_color_a);
         for (int i = 0; i < clouds.length; i++) {
             batch.draw(textureClouds[(int) clouds[i].z], clouds[i].x, clouds[i].y);
         }
