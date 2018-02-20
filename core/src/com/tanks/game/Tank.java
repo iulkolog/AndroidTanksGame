@@ -36,6 +36,12 @@ public abstract class Tank {
 
     protected StringBuilder tmpStrBuilder = new StringBuilder();
 
+    private float tank_color_r;
+    private float tank_color_g;
+    private float tank_color_b;
+    private float tank_color_a;
+
+
     public boolean isMakeTurn() {
         return makeTurn;
     }
@@ -85,6 +91,17 @@ public abstract class Tank {
         this.speed = 100.0f;
         this.makeTurn = true;
         this.reddish = 0.0f;
+
+        if (game.getMap().isNight_light()){
+            tank_color_r = 0.5f;
+            tank_color_g = 0.5f;
+            tank_color_b = 0.5f;
+        }
+        else {
+            tank_color_r = 1;
+            tank_color_g = 1;
+            tank_color_b = 1;
+        }
     }
 
     public void render(SpriteBatch batch) {
@@ -101,12 +118,13 @@ public abstract class Tank {
             t = MathUtils.random(-2f, 2f);
         }
 
+        batch.setColor(tank_color_r, tank_color_g, tank_color_b, 1);
         batch.draw(textureTurret, weaponPosition.x, weaponPosition.y + t, textureTurret.getRegionWidth() / 10, textureTurret.getRegionHeight() / 2, textureTurret.getRegionWidth(), textureTurret.getRegionHeight(), 1, 1, turretAngle);
         batch.draw(textureTrack, position.x + 4, position.y);
         batch.draw(textureBase, position.x, position.y + textureTrack.getRegionHeight() / 3 + t);
 
 
-        batch.setColor(1, 1, 1, 1);
+
     }
 
     public void renderHUD(SpriteBatch batch, BitmapFont font) {
@@ -165,7 +183,12 @@ public abstract class Tank {
     public boolean takeDamage(int dmg) {
         hp -= dmg;
         reddish += 1.0f;
-        game.getInfoSystem().addMessage("-" + dmg, position.x + 20, position.y + 100, FlyingText.Colors.RED);
+        //int  c = 0x0080;
+        //String emoji = Character.toString((char)c);
+        //char emoji = '\u2202';
+        char emoji = '\u0080';
+        System.out.println(emoji);
+        game.getInfoSystem().addMessage("-" + dmg + emoji, position.x + 20, position.y + 100, FlyingText.Colors.RED);
         if (hp <= 0) {
             return true;
         }
