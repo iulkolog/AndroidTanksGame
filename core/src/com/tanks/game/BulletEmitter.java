@@ -8,7 +8,8 @@ import com.badlogic.gdx.math.Vector2;
 public class BulletEmitter extends ObjectPool<Bullet> {
     public enum BulletType {
         LIGHT_AMMO(ParticleEmitter.BulletEffectType.FIRE, true, true, 32, 5.0f),
-        LASER(ParticleEmitter.BulletEffectType.LASER, false, true, 1, 10.0f);
+        LASER(ParticleEmitter.BulletEffectType.LASER, false, true, 1, 10.0f),
+        SOMEKIND(ParticleEmitter.BulletEffectType.TOXIC_RAIN, true, true, 5, 10.0f);
 
         private ParticleEmitter.BulletEffectType effect;
         private boolean gravity;
