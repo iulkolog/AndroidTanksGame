@@ -480,6 +480,10 @@ public class GameScreen implements Screen {
         Gdx.gl.glClearColor(0, 0, 0, 1);
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
         batch.begin();
+        if (map.isNight_light()){
+            batch.setColor(0.5f, 0.5f, 0.5f, 1);
+        }
+
         batch.draw(textureBackground, 0, 0);
         map.render(batch);
         for (int i = 0; i < players.size(); i++) {
