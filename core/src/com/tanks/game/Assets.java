@@ -23,6 +23,7 @@ public class Assets {
     private AssetManager assetManager;
     private TextureAtlas atlas;
 
+
     public TextureAtlas getAtlas() {
         return atlas;
     }
@@ -74,6 +75,7 @@ public class Assets {
         fontParameter.fontParameters.shadowOffsetY = 0;
         fontParameter.fontParameters.shadowColor = Color.BLACK;
         assetManager.load("zorque" + size + ".ttf", BitmapFont.class, fontParameter);
+
     }
 
 //    public void makeLinks() {
