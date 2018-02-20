@@ -13,7 +13,7 @@ import com.badlogic.gdx.math.Vector2;
 
 public class ParticleEmitter extends ObjectPool<Particle> {
     public enum BulletEffectType {
-        NONE, FIRE, SMOKE, LASER, TRACER
+        NONE, FIRE, LASER, TRACER, TOXIC_RAIN
     }
 
     private TextureRegion particleTexture;
@@ -49,6 +49,11 @@ public class ParticleEmitter extends ObjectPool<Particle> {
             case TRACER:
                 for (int i = 0; i < 1; i++) {
                     setup(x, y, 0, 0, 3.0f, 0.1f, 0.1f, 0.5f, 0.5f, 0.5f, 1, 0.5f, 0.5f, 0.5f, 1f);
+                }
+                break;
+            case TOXIC_RAIN:
+                for (int i = 0; i < 1; i++) {
+                    setup(x, y, MathUtils.random(-50, 50), MathUtils.random(-50, 50), 1f, 2f, 0.1f, 0.5f, 0.5f, 1, 1, 1, 1f, 1, 0.7f);
                 }
                 break;
         }
